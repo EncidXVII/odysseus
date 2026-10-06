@@ -106,8 +106,6 @@
 <style>
   @font-face { font-family: 'Fira Code'; font-weight: 400; font-style: normal; font-display: swap; src: url('static/fonts/FiraCode-Regular.woff2') format('woff2'); }
   @font-face { font-family: 'Fira Code'; font-weight: 600; font-style: normal; font-display: swap; src: url('static/fonts/FiraCode-SemiBold.woff2') format('woff2'); }
-  @font-face { font-family: 'Inter'; font-weight: 400; font-style: normal; font-display: swap; src: url('static/fonts/Inter-Regular.woff2') format('woff2'); }
-  @font-face { font-family: 'Inter'; font-weight: 600; font-style: normal; font-display: swap; src: url('static/fonts/Inter-SemiBold.woff2') format('woff2'); }
   /* Mirror the main app's :root defaults (static/style.css ~line 18) so an
      uncustomized theme — or a fresh browser with no `odysseus-theme` in
      localStorage — renders the login page in the same palette as the rest
@@ -136,8 +134,7 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    /* Readable form; Fira Code stays on the wordmark and version label. */
-    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-family: 'Fira Code', monospace;
     background: var(--bg); color: var(--fg);
     display: flex; justify-content: center; align-items: flex-start;
     min-height: 100vh; min-height: 100dvh;
@@ -156,7 +153,7 @@
     text-align: center; margin-bottom: 1.5rem;
   }
   .logo span {
-    font-family: 'Fira Code', monospace;   /* the original logo face */
+    font-family: 'Fira Code', monospace;
     font-size: 2rem; font-weight: 600;
     letter-spacing: 0.04em;
     /* Solid wordmark, matching the app's welcome title (static/refresh.css). */

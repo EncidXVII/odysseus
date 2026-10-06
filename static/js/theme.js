@@ -49,15 +49,12 @@ const LS_KEY = 'odysseus-theme';
 const CUSTOM_THEMES_KEY = 'odysseus-custom-themes';
 
 const FONT_MAP = {
-  // Default: readable sans for the interface, Fira Code kept for accents
-  // (wordmark, titles, labels, meta, code) via --font-accent.
-  odysseus: "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
   mono: "'Fira Code', monospace",
   sans: "system-ui, -apple-system, 'Segoe UI', sans-serif",
   serif: "Georgia, 'Times New Roman', serif",
   opendyslexic: "'OpenDyslexic', sans-serif",
 };
-const DEFAULT_FONT = 'odysseus';
+const DEFAULT_FONT = 'mono';
 const DEFAULT_DENSITY = 'comfortable';
 const MAX_CUSTOM_THEMES = 8;
 
@@ -405,10 +402,6 @@ export function applyFontDensity(font, density) {
   }
   if (!family) family = FONT_MAP[DEFAULT_FONT];
   document.documentElement.style.setProperty('--font-family', family);
-  // Accent face for the brand, labels and meta: Fira Code with the
-  // default font; any other choice (incl. OpenDyslexic) is used everywhere.
-  document.documentElement.style.setProperty('--font-accent', f === 'odysseus' ? FONT_MAP.mono : family);
-  document.documentElement.style.setProperty('--font-read', family);
   document.documentElement.classList.remove('density-compact', 'density-spacious');
   if (d !== 'comfortable') document.documentElement.classList.add('density-' + d);
 }

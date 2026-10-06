@@ -35,11 +35,8 @@
   --dur-3: 240ms;   /* modals, sheets, messages */
   --ease-out: cubic-bezier(.2, .8, .2, 1);
   --r-menu: 10px;   /* = item radius 6 + menu padding 4 */
-  /* Default font pair (theme.js keeps these in sync with the font setting):
-     Inter for the interface, Fira Code as the accent. */
-  --font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-accent: 'Fira Code', ui-monospace, monospace;
-  --font-read: var(--font-family);
+  /* Default font (theme.js keeps it in sync with the font setting). */
+  --font-family: 'Fira Code', monospace;
   --font-code: 'Fira Code', ui-monospace, SFMono-Regular, Consolas, monospace;
 }
 
@@ -98,14 +95,14 @@ html { scrollbar-color: color-mix(in srgb, var(--fg) 22%, transparent) transpare
 .section-header-flex:hover { background: var(--hover); }
 .section-header-flex .section-title { color: var(--text-3); font-weight: 500; }
 .section-header-flex:hover .section-title { color: var(--text-2); }
-/* Sidebar hierarchy: rows (sans) > group eyebrows (small mono caps).
+/* Sidebar hierarchy: rows > group eyebrows (small caps).
    Groups are separated by space, not by size: more room above a group
    than between its rows. */
 #email-section, #workspace-section, #tools-section { margin-top: 12px; }
 /* Email opens the inbox: it is a destination, so it reads as a row. */
 #email-section .section-title {
   font-family: var(--font-family);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 400;
   text-transform: none;
   letter-spacing: normal;
@@ -116,7 +113,7 @@ html { scrollbar-color: color-mix(in srgb, var(--fg) 22%, transparent) transpare
 #sidebar-new-chat-btn .grow { color: var(--fg); font-weight: 500; }   /* the one primary action */
 /* Drop the inline pixel nudges on these two rows so every label shares one x. */
 :is(#sidebar-new-chat-btn, #sidebar-search-btn) > :is(svg, .grow) { left: 0 !important; }
-.user-bar-name { font-size: 12px; font-weight: 500; color: var(--text-2); }   /* quieter than navigation */
+.user-bar-name { font-weight: 500; color: var(--text-2); }   /* quieter than navigation */
 @media (max-width: 768px) {
   /* Eyebrow rows don't need a full 48px; 40px keeps a comfortable tap target. */
   .section-header-flex { height: 40px !important; padding: 0 10px !important; }
@@ -212,7 +209,7 @@ html { scrollbar-color: color-mix(in srgb, var(--fg) 22%, transparent) transpare
   border-color: color-mix(in srgb, var(--fg) 22%, transparent);
   box-shadow: var(--hi), 0 0 0 3px var(--hover), var(--float);
 }
-.chat-input-bar textarea#message { font-family: var(--font-read) !important; }
+.chat-input-bar textarea#message { font-family: var(--font-family) !important; }
 .chat-input-bar textarea#message::placeholder { color: var(--text-3); }
 
 .input-icon-btn { opacity: 1; color: var(--text-2); border-radius: var(--r); }
@@ -262,7 +259,7 @@ html { scrollbar-color: color-mix(in srgb, var(--fg) 22%, transparent) transpare
 /* ── Messages ──────────────────────────────────────────── */
 
 .msg-user,
-.msg-ai { font-family: var(--font-read); }
+.msg-ai { font-family: var(--font-family); }
 .msg :is(pre, code, kbd, samp) { font-family: var(--font-code); }
 .msg-user {
   border-color: var(--line-2);
@@ -517,11 +514,10 @@ button.cal-today-btn:hover { opacity: 1; color: var(--fg); }
 .section.will-collapse .section-collapse-chevron { transform: rotate(-90deg); }
 .chat-input-bar .input-icon-btn svg { stroke-width: 2; }
 
-/* ── Fonts: readable base, mono accents ──────────────────
-   Everything people read or click uses --font-family (Inter by default).
-   Fira Code (--font-accent) is the brand voice, used sparingly: the logo, group labels, model names, timestamps, counts, keyboard hints. Code always stays monospace. Any other font setting
-   (incl. OpenDyslexic) replaces both. Windows used to hard-code Inter and
-   ignore the setting. */
+/* ── Fonts ─────────────────────────────────────────────────
+   Everything uses --font-family (Fira Code by default), so the font
+   setting (incl. OpenDyslexic) reaches every surface; some windows used to
+   hard-code their own face and ignore it. Code always stays monospace. */
 body,
 .modal-content,
 .notes-pane,
@@ -529,8 +525,8 @@ body,
 .email-reader-body,
 .doc-email-richbody,
 .doclib-card-action-btn { font-family: var(--font-family); }
-/* Mono marks machine things (models, numbers, times, keys, code) and the
-   brand. People-facing text (titles, actions, content) stays sans. */
+/* Machine things (models, numbers, times, keys) and labels: same face,
+   but without ligatures or faked weights. */
 .section-header-flex .section-title,
 .model-picker-btn,
 .msg .role,
@@ -546,7 +542,7 @@ time,
 kbd,
 .badge,
 .meta {
-  font-family: var(--font-accent);
+  font-family: var(--font-family);
   font-variant-ligatures: none;   /* no -> arrows in interface text */
   font-synthesis: none;           /* use a real face, never a faked bold */
   letter-spacing: normal;
@@ -562,7 +558,7 @@ kbd,
 /* Settings group labels are the same kind of element as the sidebar's
    group labels: same eyebrow style, full opacity (was dimmed to 35%). */
 .settings-sidebar-label {
-  font-family: var(--font-accent);
+  font-family: var(--font-family);
   font-variant-ligatures: none;
   font-size: 10.5px;
   letter-spacing: .08em;
@@ -584,9 +580,6 @@ kbd,
   letter-spacing: .08em;
 }
 @media (max-width: 768px) { .section-header-flex .section-title { font-size: 11.5px !important; } }
-@media (min-width: 769px) {
-  .sidebar .list-item .grow { font-size: 13px; }   /* Inter reads small at mono sizes */
-}
 
 /* ── Quality of life ───────────────────────────────────── */
 :root { accent-color: var(--red); }            /* checkboxes, radios, ranges, progress */
