@@ -19,9 +19,12 @@
   --raise: var(--input-bg, var(--panel));
   --raise-2: color-mix(in srgb, var(--fg) 9%, var(--input-bg, var(--panel)));
   --accent-soft: color-mix(in srgb, var(--red) 15%, transparent);
-  /* Fill for text-bearing primary buttons: white label clears AA 4.5:1
-     (plain --red only reaches ~3.2:1). Same recipe as login.html. */
+  /* Fill and label for text-bearing primary buttons. These are first-paint
+     defaults for the default coral; theme.js recomputes all three per accent
+     so the label always clears AA 4.5:1 (bright accents get a dark label). */
   --accent-fill: color-mix(in srgb, var(--red) 78%, #000);
+  --accent-fill-hover: color-mix(in srgb, var(--red) 70%, #000);
+  --accent-ink: #fff;
   --hi: inset 0 1px 0 color-mix(in srgb, #fff 4%, transparent);
   --float: 0 1px 2px rgb(0 0 0 / .22), 0 14px 36px -10px rgb(0 0 0 / .45);
   --r-sm: 6px;
@@ -127,7 +130,7 @@ html { scrollbar-color: color-mix(in srgb, var(--fg) 22%, transparent) transpare
 }
 
 .sidebar-user-bar { border-top: 1px solid var(--line); }
-.user-bar-avatar { background: var(--red); color: #fff; }
+.user-bar-avatar { background: var(--accent-fill); color: var(--accent-ink); }
 .user-bar-btn { opacity: 1; color: var(--text-2); border-radius: var(--r); }
 .user-bar-btn:hover { opacity: 1; color: var(--fg); background: var(--hover); }
 .user-bar-actions { display: flex; align-items: center; gap: 2px; }
@@ -198,7 +201,8 @@ html { scrollbar-color: color-mix(in srgb, var(--fg) 22%, transparent) transpare
 /* ── Composer ──────────────────────────────────────────── */
 
 .chat-input-bar {
-  border-color: var(--line-2);
+  /* --input-border is the Theme panel's "Input Border" setting. */
+  border-color: var(--input-border, var(--line-2));
   border-radius: var(--r-lg);
   box-shadow: var(--hi), var(--float);
   transition: border-color .15s, box-shadow .15s, margin .3s ease, max-width .3s ease;
@@ -206,7 +210,7 @@ html { scrollbar-color: color-mix(in srgb, var(--fg) 22%, transparent) transpare
 /* The composer is focused most of the time, so focus is a neutral lift,
    not an accent ring; the accent stays meaningful for Nobody / plan mode. */
 .chat-input-bar:focus-within {
-  border-color: color-mix(in srgb, var(--fg) 22%, transparent);
+  border-color: color-mix(in srgb, var(--input-border, var(--line-2)), var(--fg) 18%);
   box-shadow: var(--hi), 0 0 0 3px var(--hover), var(--float);
 }
 .chat-input-bar textarea#message { font-family: var(--font-family) !important; }
@@ -262,11 +266,13 @@ html { scrollbar-color: color-mix(in srgb, var(--fg) 22%, transparent) transpare
 .msg-ai { font-family: var(--font-family); }
 .msg :is(pre, code, kbd, samp) { font-family: var(--font-code); }
 .msg-user {
-  border-color: var(--line-2);
+  border-color: var(--bubble-border, var(--line-2));
   border-radius: var(--r-lg);
   box-shadow: var(--hi);
 }
-.msg-ai { border-color: transparent; }
+/* AI replies are unframed unless a theme sets "Border Chat Bubble"
+   explicitly (theme.js mirrors it into --ai-bubble-border). */
+.msg-ai { border-color: var(--ai-bubble-border, transparent); }
 
 /* Prose gets emphasis from weight, not hue. Syntax colors stay inside code
    blocks; links carry the accent, mixed toward the text color so they keep
@@ -346,12 +352,12 @@ html { scrollbar-color: color-mix(in srgb, var(--fg) 22%, transparent) transpare
   border: 1px solid transparent;
   border-radius: var(--r);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / .2), 0 1px 2px rgb(0 0 0 / .2);
-  color: #fff;
+  color: var(--accent-ink);
 }
 .confirm-btn-primary:hover,
 .admin-btn-add:hover,
 .cal-btn-primary:hover,
-.email-send-btn:hover { background: color-mix(in srgb, var(--red) 70%, #000); border-color: transparent; }
+.email-send-btn:hover { background: var(--accent-fill-hover); border-color: transparent; }
 
 .confirm-btn { padding: 5px 14px; border-radius: var(--r); }
 .confirm-btn-danger,

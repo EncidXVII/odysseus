@@ -1443,7 +1443,14 @@ const _AUTO_WIRE = {
 // two URLs.
 const _EXTRA_LAUNCHERS = {
   'email-lib-modal': ['email-section-title'],
+  'memory-modal':    ['tool-skills-btn'],
   'settings-modal':  ['user-bar-settings'],
+};
+// Skills and Memory share #memory-modal, so their launchers only close the
+// view they open; from the other view the click falls through and switches.
+const _LAUNCHER_MODE = {
+  'tool-memory-btn': 'memory',
+  'tool-skills-btn': 'skills',
 };
 function _launcherModalId(btnId) {
   for (const [modalId, wire] of Object.entries(_AUTO_WIRE)) {
@@ -1470,6 +1477,8 @@ if (!window.__odysseusLauncherToggle) {
     if (!modalId || _state.get(modalId)?.isMinimized) return;
     const modal = document.getElementById(modalId);
     if (!modal || !_isShowing(modal)) return;
+    const mode = _LAUNCHER_MODE[launcher.id];
+    if (mode && (modal.dataset.memoryMode || 'memory') !== mode) return;
     const closeBtn = modal.querySelector('.modal-header .close-btn, .close-btn, .modal-close, [data-close]');
     if (!closeBtn) return;
     e.preventDefault();

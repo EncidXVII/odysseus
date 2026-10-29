@@ -5,6 +5,7 @@ import Storage from './storage.js';
 import uiModule from './ui.js?v=20260916largetoolscroll1';
 import { initColorPickers, attachColorPicker } from './colorPicker.js?v=20260910eyedropper1';
 import { hexToRgb } from './color/hex.js';
+import { accentButtonColors } from './color/contrast.js';
 import { makeWindowDraggable } from './windowDrag.js';
 import { snapModalToZone } from './tileManager.js?v=20260910responsivebounds1';
 
@@ -12,16 +13,17 @@ export const THEMES = {
   // Default pair: neutral greys, hairline borders, Odysseus coral as the one accent.
   dark:       { bg:'#131418', fg:'#ececef', panel:'#18191d', border:'#2a2b31', red:'#e06c75',
                 advanced: { inputBg: '#1e1f24', inputBorder: '#2f3036', userBubbleBg: '#1e1f24',
-                            aiBubbleBg: '#131418', bubbleBorder: '#2a2b31', sidebarBg: '#18191d',
+                            aiBubbleBg: '#131418', sidebarBg: '#18191d',
                             brandColor: '#e06c75', brandMixTo: '#f08a92', hamburgerColor: '#9d9ea7',
                             codeBg: '#0f1013', codeFg: '#ececef' } },
   light:      { bg:'#f4f4f6', fg:'#18191d', panel:'#fbfbfc', border:'#dcdde2', red:'#d65a65',
                 advanced: { inputBg: '#fefefe', inputBorder: '#d4d5da', userBubbleBg: '#fefefe',
-                            aiBubbleBg: '#f4f4f6', bubbleBorder: '#dcdde2', sidebarBg: '#fbfbfc',
+                            aiBubbleBg: '#f4f4f6', sidebarBg: '#fbfbfc',
                             brandColor: '#d65a65', brandMixTo: '#d65a65', hamburgerColor: '#5b5d66',
                             codeBg: '#ececf0', codeFg: '#18191d' } },
-  // Previous defaults, kept for anyone who prefers them.
-  classic:    { bg:'#282c34', fg:'#9cdef2', panel:'#21252b', border:'#3a4450', red:'#e06c75' },
+  // Previous dark and light defaults, kept exactly for anyone who prefers them.
+  classic:    { bg:'#282c34', fg:'#9cdef2', panel:'#111111', border:'#355a66', red:'#e06c75' },
+  'classic-light': { bg:'#f3f5f7', fg:'#26313a', panel:'#ffffff', border:'#cbd3da', red:'#b34d5c' },
   sand:       { bg:'#f2ede5', fg:'#332d27', panel:'#faf7f2', border:'#ddd5c9', red:'#a95a36' },
   midnight:   { bg:'#0d1117', fg:'#d1d7e0', panel:'#151b23', border:'#2a313c', red:'#f0605a' },
   // Character themes: each keeps its signature hue in the background tint and
@@ -48,7 +50,7 @@ export const THEMES = {
 };
 
 const DEFAULT_THEME = 'dark';
-const THEME_DISPLAY_NAMES = { ocean: 'starfield' };
+const THEME_DISPLAY_NAMES = { ocean: 'starfield', classic: 'original', 'classic-light': 'original light', gpt: 'GPT' };
 const LS_KEY = 'odysseus-theme';
 const CUSTOM_THEMES_KEY = 'odysseus-custom-themes';
 
@@ -72,6 +74,7 @@ const MAX_CUSTOM_THEMES = 8;
 const THEME_DEFAULT_PATTERN = {
   dark:       'none',
   light:      'none',
+  'classic-light': 'dots',
   sand:       'dots',
   midnight:   'rain',
   cyberpunk:  'synapse',
@@ -310,6 +313,11 @@ export function applyColors(colors) {
   s.setProperty('--panel', colors.panel);
   s.setProperty('--border', colors.border);
   if (colors.red) s.setProperty('--red', colors.red);
+  // Primary-button fill and label that clear WCAG AA for this accent.
+  const btn = accentButtonColors(colors.red || '#e06c75');
+  s.setProperty('--accent-fill', btn.fill);
+  s.setProperty('--accent-fill-hover', btn.hover);
+  s.setProperty('--accent-ink', btn.ink);
   // Native controls (select popups, date pickers, scrollbars) follow the theme.
   s.colorScheme = hexToHSL(colors.bg)[2] < 50 ? 'dark' : 'light';
   // Lets CSS give light themes stronger text tiers (see refresh.css).
@@ -339,6 +347,10 @@ export function applyColors(colors) {
   for (const { key, css } of ADV_KEYS) {
     s.setProperty(css, adv[key] || defaults[key]);
   }
+  // AI replies stay unframed by default; an explicit bubble border frames
+  // them too, as it did before the redesign (see refresh.css).
+  if (adv.bubbleBorder) s.setProperty('--ai-bubble-border', adv.bubbleBorder);
+  else s.removeProperty('--ai-bubble-border');
 
   // Update favicon to match theme accent color
   _updateFavicon(colors.red || '#e06c75');
@@ -719,7 +731,7 @@ export function initThemeUI() {
         <span style="background:${c.fg}"></span>
         <span style="background:${c.red}"></span>
       </div>
-      ${name === 'classic' ? 'original' : (name === 'gpt' ? 'GPT' : (THEME_DISPLAY_NAMES[name] || name))}
+      ${THEME_DISPLAY_NAMES[name] || name}
     </div>
   `).join('');
 
