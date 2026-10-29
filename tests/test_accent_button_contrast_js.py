@@ -63,3 +63,30 @@ def test_primary_buttons_use_the_derived_label_color():
     assert "background: var(--accent-fill)" in primary
     assert "color: var(--accent-ink)" in primary
     assert "setProperty('--accent-ink'" in THEME_JS
+
+
+def test_login_page_copy_matches_the_shared_helper():
+    # login.html's synchronous head script cannot import contrast.js, so it
+    # carries a copy; both must give the same button colors for every theme.
+    login = (ROOT / "static" / "login.html").read_text(encoding="utf-8")
+    copy = login.split("  function accentButtonColors(accent) {", 1)[1].split("\n  try {", 1)[0]
+    copy = "function accentButtonColors(accent) {" + copy
+    accents = _builtin_accents()
+    source = (
+        f"import {{ accentButtonColors as shared }} from {json.dumps(HELPER.as_uri())};"
+        f"{copy}\n"
+        f"const out = {{}};"
+        f"for (const [name, red] of Object.entries({json.dumps(accents)})) {{"
+        f"  out[name] = [shared(red), accentButtonColors(red)];"
+        f"}}"
+        f"console.log(JSON.stringify(out));"
+    )
+    proc = subprocess.run(
+        ["node", "--input-type=module"],
+        input=source, cwd=ROOT, capture_output=True, text=True, timeout=30,
+    )
+    assert proc.returncode == 0, proc.stderr
+    pairs = json.loads(proc.stdout.strip())
+    assert {name: a for name, (a, b) in pairs.items() if a != b} == {}
+    assert "background: var(--accent-fill," in login
+    assert "color: var(--accent-ink, #fff)" in login
