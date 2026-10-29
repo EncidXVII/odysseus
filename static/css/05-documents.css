@@ -863,7 +863,9 @@
   transition: opacity 0.12s, color 0.12s, background 0.12s;
 }
 .md-view-label {
-  font-size: 11px;
+  /* Stays below the 11px floor: the 22px-tall toggle shares the phone
+     toolbar row with the formatting tools, which need the scroll room. */
+  font-size: 10px;
   font-weight: 600;
   line-height: 1;
 }
