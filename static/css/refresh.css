@@ -26,6 +26,9 @@
   --accent-fill-hover: color-mix(in srgb, var(--red) 70%, #000);
   --accent-ink: #fff;
   --hi: inset 0 1px 0 color-mix(in srgb, #fff 4%, transparent);
+  /* Two elevations: --rest lifts surfaces that sit in the page (the
+     composer); --float is for what overlays it (windows, menus, popovers). */
+  --rest: 0 1px 2px rgb(0 0 0 / .12), 0 4px 12px -6px rgb(0 0 0 / .2);
   --float: 0 1px 2px rgb(0 0 0 / .22), 0 14px 36px -10px rgb(0 0 0 / .45);
   --r-sm: 6px;
   --r: 8px;
@@ -48,6 +51,9 @@
 :root[data-scheme="light"] {
   --text-2: color-mix(in srgb, var(--fg) 84%, var(--bg));
   --text-3: color-mix(in srgb, var(--fg) 66%, var(--bg));
+  /* Black shadows read much darker on a light background. */
+  --rest: 0 1px 2px rgb(0 0 0 / .05), 0 4px 12px -6px rgb(0 0 0 / .1);
+  --float: 0 1px 2px rgb(0 0 0 / .08), 0 12px 32px -10px rgb(0 0 0 / .2);
 }
 :root[data-scheme="light"] .msg a { color: color-mix(in srgb, var(--red) 70%, var(--fg)); }
 
@@ -204,14 +210,14 @@ html { scrollbar-color: color-mix(in srgb, var(--fg) 22%, transparent) transpare
   /* --input-border is the Theme panel's "Input Border" setting. */
   border-color: var(--input-border, var(--line-2));
   border-radius: var(--r-lg);
-  box-shadow: var(--hi), var(--float);
+  box-shadow: var(--hi), var(--rest);
   transition: border-color .15s, box-shadow .15s, margin .3s ease, max-width .3s ease;
 }
 /* The composer is focused most of the time, so focus is a neutral lift,
    not an accent ring; the accent stays meaningful for Nobody / plan mode. */
 .chat-input-bar:focus-within {
   border-color: color-mix(in srgb, var(--input-border, var(--line-2)), var(--fg) 18%);
-  box-shadow: var(--hi), 0 0 0 3px var(--hover), var(--float);
+  box-shadow: var(--hi), 0 0 0 3px var(--hover), var(--rest);
 }
 .chat-input-bar textarea#message { font-family: var(--font-family) !important; }
 .chat-input-bar textarea#message::placeholder { color: var(--text-3); }
